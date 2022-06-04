@@ -1,5 +1,3 @@
-add_subdirectory(pybind11 EXCLUDE_FROM_ALL)
-
 add_library(alice_cli11 INTERFACE) # v1.3
 target_include_directories(alice_cli11 SYSTEM INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/cli11)
 
