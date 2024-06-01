@@ -98,7 +98,7 @@ inline std::string format_with_vector( const std::string& fmtstr, const std::vec
   std::vector<fmt::basic_format_arg<ctx>> args;
   for ( const auto& v : values )
   {
-    args.emplace_back( fmt::internal::make_arg<ctx>( v ) );
+    args.emplace_back( fmt::v6::internal::make_arg<ctx>( v ) );
   }
 
   return fmt::vformat( fmtstr, fmt::basic_format_args<ctx>( args.data(), static_cast<unsigned>( args.size() ) ) );
