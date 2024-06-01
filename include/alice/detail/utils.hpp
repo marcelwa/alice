@@ -27,18 +27,23 @@
 
 #pragma once
 
+#include <algorithm>
+#include <cctype>
 #include <cstdio>
 #include <cstdlib>
+#include <locale>
+#include <memory>
+#include <stdexcept>
+#include <stdlib.h>
+#include <string>
+#include <utility>
+#include <vector>
+
 #ifndef _WIN32
 #include <wordexp.h>
 #endif
 
-#include <algorithm>
-#include <cctype>
-#include <locale>
-#include <memory>
-#include <string>
-
+#include <fmt/core.h>
 #include <fmt/format.h>
 
 namespace alice
@@ -51,16 +56,14 @@ namespace detail
 
 inline void ltrim( std::string& s )
 {
-  s.erase( s.begin(), std::find_if( s.begin(), s.end(), []( int ch ) {
-             return !std::isspace( ch );
-           } ) );
+  s.erase( s.begin(), std::find_if( s.begin(), s.end(), []( int ch )
+                                    { return !std::isspace( ch ); } ) );
 }
 
 inline void rtrim( std::string& s )
 {
-  s.erase( std::find_if( s.rbegin(), s.rend(), []( int ch ) {
-             return !std::isspace( ch );
-           } )
+  s.erase( std::find_if( s.rbegin(), s.rend(), []( int ch )
+                         { return !std::isspace( ch ); } )
                .base(),
            s.end() );
 }
@@ -195,7 +198,7 @@ inline std::vector<std::string> split( const std::string& str, const std::string
 #ifdef _WIN32
 inline std::pair<int, std::string> execute_program( const std::string& cmd )
 {
-  return {-1, "[w] program execution not yet supported in Windows\n"};
+  return { -1, "[w] program execution not yet supported in Windows\n" };
 }
 #else
 // from http://stackoverflow.com/questions/478898/how-to-execute-a-command-and-get-output-of-command-within-c-using-posix
@@ -205,7 +208,8 @@ inline std::pair<int, std::string> execute_program( const std::string& cmd )
   std::string result;
   int exit_status;
 
-  std::shared_ptr<FILE> pipe( popen( cmd.c_str(), "r" ), [&exit_status]( FILE* fp ) { auto status = pclose( fp ); exit_status = WEXITSTATUS( status ); } );
+  std::shared_ptr<FILE> pipe( popen( cmd.c_str(), "r" ), [&exit_status]( FILE* fp )
+                              { auto status = pclose( fp ); exit_status = WEXITSTATUS( status ); } );
   if ( !pipe )
   {
     throw std::runtime_error( "[e] popen() failed" );
@@ -217,7 +221,7 @@ inline std::pair<int, std::string> execute_program( const std::string& cmd )
       result += buffer;
     }
   }
-  return {exit_status, result};
+  return { exit_status, result };
 }
 #endif
 
