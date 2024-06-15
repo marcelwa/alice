@@ -57,13 +57,13 @@ namespace detail
 inline void ltrim( std::string& s )
 {
   s.erase( s.begin(), std::find_if( s.begin(), s.end(), []( int ch )
-                                    { return std::isspace( ch ) == 0; } ) );
+                                    { return !std::isspace( ch ); } ) );
 }
 
 inline void rtrim( std::string& s )
 {
   s.erase( std::find_if( s.rbegin(), s.rend(), []( int ch )
-                         { return std::isspace( ch ) == 0; } )
+                         { return !std::isspace( ch ); } )
                .base(),
            s.end() );
 }
@@ -94,15 +94,17 @@ inline std::string trim_copy( std::string s )
 
 inline std::string format_with_vector( const std::string& fmtstr, const std::vector<std::string>& values )
 {
+  // Create a vector of pointers to format arguments
   std::vector<fmt::basic_format_arg<fmt::format_context>> args;
-
   for ( const auto& v : values )
   {
-    args.push_back( fmt::internal::make_arg<fmt::format_context>( v ) );
+    args.push_back( fmt::detail::make_arg<fmt::format_context>( v ) );
   }
 
-  const fmt::basic_format_args<fmt::format_context> format_args( args.data(), static_cast<int>( args.size() ) );
+  // Create a format arguments object from the vector
+  auto format_args = fmt::basic_format_args<fmt::format_context>( args.data(), args.size() );
 
+  // Format the string using the format arguments
   return fmt::vformat( fmtstr, format_args );
 }
 
