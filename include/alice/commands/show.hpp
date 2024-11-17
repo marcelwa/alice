@@ -134,7 +134,7 @@ private:
 
         if ( !is_set( "silent" ) )
         {
-          std::system( fmt::format( program, filename ).c_str() );
+          std::system( fmt::format( fmt::runtime( program ), filename ).c_str() );
         }
 
         if ( is_set( "delete" ) )
