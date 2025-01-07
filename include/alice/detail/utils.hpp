@@ -43,6 +43,7 @@
 #include <wordexp.h>
 #endif
 
+#include <fmt/args.h>
 #include <fmt/core.h>
 #include <fmt/format.h>
 
