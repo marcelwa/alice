@@ -94,18 +94,15 @@ inline std::string trim_copy( std::string s )
 
 inline std::string format_with_vector( const std::string& fmtstr, const std::vector<std::string>& values )
 {
-  // Create a vector of pointers to format arguments
-  std::vector<fmt::basic_format_arg<fmt::format_context>> args;
+  fmt::dynamic_format_arg_store<fmt::format_context> store{};
+
   for ( const auto& v : values )
   {
-    args.push_back( fmt::detail::make_arg<fmt::format_context>( v ) );
+    store.push_back( v );
   }
 
-  // Create a format arguments object from the vector
-  auto format_args = fmt::basic_format_args<fmt::format_context>( args.data(), args.size() );
-
-  // Format the string using the format arguments
-  return fmt::vformat( fmtstr, format_args );
+  // Format the string using the dynamic format argument store
+  return fmt::vformat( fmtstr, store );
 }
 
 template<char sep>
